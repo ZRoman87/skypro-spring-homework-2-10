@@ -2,12 +2,12 @@ package com.example.skyprospringhomework210.service;
 
 import com.example.skyprospringhomework210.model.Employee;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface EmployeeService {
     Employee addEmployee(String firstName, String lastName, String department, double salary);
-    Employee removeEmployee(String firstName, String lastName, String department, double salary);
-    Employee findEmployee(String firstName, String lastName, String department, double salary);
-    List<Employee> printEmployees();
+    Employee removeEmployee(String firstName, String lastName);
+    Employee findEmployee(String firstName, String lastName);
+    Collection<Employee> printEmployees();
 
 }

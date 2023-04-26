@@ -1,55 +1,74 @@
 package com.example.skyprospringhomework210.service;
 
 import com.example.skyprospringhomework210.exception.EmployeeAlreadyAddedException;
+import com.example.skyprospringhomework210.exception.EmployeeBadRequestException;
 import com.example.skyprospringhomework210.exception.EmployeeNotFoundException;
-import com.example.skyprospringhomework210.exception.EmployeeStorageIsFullException;
 import com.example.skyprospringhomework210.model.Employee;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    private final int CAPACITY = 5;
-    public List<Employee> employees = new ArrayList<>(CAPACITY);
+
+    private final Map<String, Employee> employees;
+
+    public EmployeeServiceImpl() {
+        this.employees = new HashMap<>();
+    }
 
     @Override
     public Employee addEmployee(String firstName, String lastName, String department, double salary) {
+
+        checkInput(firstName,lastName);
         Employee employee = new Employee(firstName, lastName, department, salary);
-        if (employees.contains(employee)) {
+
+        if (!employees.containsKey(employee.getFullName())) {
+            employees.put(employee.getFullName(), employee);
+            return employee;
+        } else {
             throw new EmployeeAlreadyAddedException();
-        } else if (employees.size() == CAPACITY) {
-            throw new EmployeeStorageIsFullException();
-        } else {
-            employees.add(employee);
-            return employee;
         }
     }
-
     @Override
-    public Employee removeEmployee(String firstName, String lastName, String department, double salary) {
-        Employee employee = new Employee(firstName, lastName, department, salary);
-        if (employees.remove(employee)) {
-            return employee;
-        } else {
-            throw new EmployeeNotFoundException();
-        }
-    }
+    public Employee removeEmployee(String firstName, String lastName) {
 
-    @Override
-    public Employee findEmployee(String firstName, String lastName, String department, double salary) {
-        Employee employee = new Employee(firstName, lastName, department, salary);
-        if (employees.contains(employee)) {
-            return employee;
+        checkInput(firstName,lastName);
+
+        String key = getKey(firstName,lastName);
+
+        if (employees.containsKey(key)) {
+            return employees.remove(key);
         } else {
             throw new EmployeeNotFoundException();
         }
     }
     @Override
-    public List<Employee> printEmployees() {
-        return Collections.unmodifiableList(employees);
+    public Employee findEmployee(String firstName, String lastName) {
+
+        checkInput(firstName,lastName);
+        String key = getKey(firstName,lastName);
+
+        if (employees.containsKey(key)) {
+            return employees.get(key);
+        } else {
+            throw new EmployeeNotFoundException();
+        }
+    }
+    @Override
+    public Collection<Employee> printEmployees() {
+        return Collections.unmodifiableCollection(employees.values());
+    }
+
+    private String getKey (String firstName, String lastName) {
+        return lastName + " " + firstName;
+    }
+    private void checkInput (String firstName, String lastName) {
+        if (!(isAlpha(firstName)&&isAlpha(lastName))) {
+            throw new EmployeeBadRequestException();
+        }
     }
 
 }

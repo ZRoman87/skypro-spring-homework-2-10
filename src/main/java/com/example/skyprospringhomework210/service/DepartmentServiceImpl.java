@@ -3,6 +3,7 @@ package com.example.skyprospringhomework210.service;
 import com.example.skyprospringhomework210.model.Employee;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final EmployeeServiceImpl employeeService;
-    private final List<Employee> employees;
+    private final Collection<Employee> employees;
 
     public DepartmentServiceImpl(EmployeeServiceImpl employeeService) {
         this.employeeService = employeeService;
@@ -36,13 +37,6 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .filter(e -> e.getDepartment().equals(department))
                 .collect(Collectors.toList());
     }
- /*   @Override
-    public List<Employee> printEmployeesListByDepartment() {
-        return employees.stream()
-               .sorted(Comparator.comparing(Employee::getDepartment))
-               .collect(Collectors.toList());
-    }*/
-
     @Override
     public Map<String, List<Employee>> printEmployeesListByDepartment() {
         return employees.stream()

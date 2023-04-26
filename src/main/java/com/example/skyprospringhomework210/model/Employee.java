@@ -1,5 +1,7 @@
 package com.example.skyprospringhomework210.model;
 
+import static org.apache.commons.lang3.StringUtils.*;
+
 public class Employee {
     private String firstName;
     private String lastName;
@@ -7,8 +9,8 @@ public class Employee {
     private double salary;
 
     public Employee(String firstName, String lastName, String department, double salary) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstName = capitalize(firstName.toLowerCase());
+        this.lastName = capitalize(lastName.toLowerCase());
         this.department = department;
         this.salary = salary;
     }
@@ -24,9 +26,13 @@ public class Employee {
     public String getDepartment() { return department; }
     public double getSalary() { return salary; }
 
+    public String getFullName() {
+        return lastName + " " + firstName;
+    }
+
     @Override
     public String toString() {
-        return  "ФИО: " + firstName + " " + lastName;
+        return  "ФИО: " + lastName + " " + firstName;
     }
 
     @Override
